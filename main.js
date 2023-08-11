@@ -1,24 +1,55 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+var typesList = document.getElementById("typesList");
+var productsList = document.getElementById("productsList")
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+getTypes().then((types)=> {
+  types.sort((a,b) =>{
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if(nameA<nameB){
+      return -1;
+    }
+    if(nameA>nameB){
+      return 1;
+    }
+    return 0;
+  });
+  types.forEach(type => {
+    let element = document.createElement('a');
+    element.classList.add('btnType');
+    element.setAttribute('id', type.id);
+    element.textContent = type.name;
+    typesList.appendChild(element);
+  });
+})
 
-setupCounter(document.querySelector('#counter'))
+getProducts().then((products)=> {
+  products.sort((a,b) =>{
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if(nameA<nameB){
+      return -1;
+    }
+    if(nameA>nameB){
+      return 1;
+    }
+    return 0;
+  });
+  products.forEach(product => {
+    let element = document.createElement('div');
+    element.classList.add('blockCategories')
+    element.innerHTML = `<div class="${product.type}" id="${product.id}">
+          <img src="${product.iconUrl}" alt="${product.name}">
+          <p class="desc">${product.name}</p>`
+          productsList.appendChild(element)
+  });
+})
+
+async function getTypes() {
+    const response = await fetch ("https://api-eko-bazarek.azurewebsites.net/api/products/types");
+    return response.json();
+}
+
+async function getProducts() {
+    const response = await fetch ("https://api-eko-bazarek.azurewebsites.net/api/products/categories");
+    return response.json();
+}
