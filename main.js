@@ -104,7 +104,7 @@ getProducts(
   });
 });
 
-const vegeOnly = document.getElementById("vegeOnly");
+const vegeOnly = document.getElementById("vege");
 const meats = ["MEAT", "FISH", "COOKED_MEATS"];
 
 vegeOnly.addEventListener("change", (event) => {
